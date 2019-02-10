@@ -1,0 +1,99 @@
+size_array EQU 5
+   
+.MODEL small
+  
+data segment
+   array db 5,2,3,8,1
+   msg db "le tri de ce tableau est : $"   
+data ends
+
+code segment
+    assume cs:code,ds:data
+    
+    start:
+     mov ax,data
+     mov ds,ax
+        mov ax,0
+        mov bx,0
+        mov cx,0
+        mov dx,0
+        mov di,0
+        mov si,0
+        mov bp,0
+        
+        
+        mov cl,size_array
+        mov sp,size_array
+        mov bp,size_array
+        
+        loop1:
+            mov al,0
+            mov al,array[di]
+            loop2:
+                mov bl,0
+                mov bl,array[si]
+                cmp al,bl
+                
+                jbe change
+                    mov dl,al
+                    mov al,bl
+                    mov bl,dl 
+                    mov array[di],al
+                    mov array[si],bl
+                    change:  
+                    inc si
+                    dec bp
+                    cmp bp,0
+             jnz loop2
+             inc di 
+             mov si,di
+             dec sp
+             mov bp,sp
+        loop loop1
+        
+        mov ax,offset msg
+        mov dx,ax
+        mov ah,09h
+        int 21h
+        
+          
+        mov ax,0
+        mov bx,0
+        mov cx,0
+        mov dx,0
+        mov di,0
+        mov si,0
+        mov bp,0
+        mov si,size_array
+        loop3:   
+            mov al,array[di] 
+            mov ah,0          
+            mov bx,10
+            mov cx,0
+            
+            for:
+            cmp ax,0
+            je boucle
+            mov dx,0 
+            div bx
+            push dx
+            inc cx 
+            jnz for
+           
+           
+            boucle:
+            mov cx,cx
+            pop dx 
+            add dx,48
+            mov ah,02
+            int 21h 
+            loop boucle
+            
+            inc di 
+            dec si
+            cmp si,0
+        jnz loop3 
+           endf: 
+            mov ax, 4c00h 
+            int 21h      
+code ends
